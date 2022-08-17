@@ -16,4 +16,21 @@ import com.guru.fontawesomecomposelib.FaIconType.*
 
 object FaIcons {
 {{ ICONS }}
+
+    fun fromName(className: String): FaIconType {
+        val (style, originalIconName) = className.split(" ").let {
+            if (it.count() == 2) {
+                (it[0] to it[1])
+            } else {
+                ("fa-solid" to className)
+            }
+        }
+
+        return when(style) {
+            "fa-solid" -> solidIconMap[originalIconName]
+            "fa-regular" -> regularIconMap[originalIconName]
+            "fa-brands" -> regularIconMap[originalIconName]
+            else -> null
+        } ?: X
+    }
 }

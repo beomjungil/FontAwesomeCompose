@@ -7,8 +7,10 @@ data class IconData(
     val unicode: String,
     val name: String,
     val originalName: String,
-    val style: List<String>
-)
+    val styles: List<String>
+) {
+    val propertyName = if (name.first().isDigit()) "`${name}`" else name
+}
 
 fun String.kebabToPascalCase(): String = this
     .split("-")
@@ -24,21 +26,21 @@ abstract class GenerateIconsTask : DefaultTask() {
         println("Reading metadata...")
         val metadata = File("${project.rootDir}/Font-Awesome/metadata/icons.json")
         val json = JsonSlurper().parseText(metadata.readText()) as Map<String, Map<String, Any>>
-        json.keys
+        val icons = json.keys
             .map {
                 IconData(
                     unicode = "0x${json[it]?.get("unicode")}",
                     name = it.kebabToPascalCase(),
                     originalName = it,
-                    style = json[it]?.get("styles") as List<String>
+                    styles = json[it]?.get("styles") as List<String>
                 )
             }
-            .joinToString("\n\n") {
-                generateCode(it)
-            }
-            .let {
-                writeCode(it)
-            }
+        val iconsCodes = icons.joinToString("\n\n") {
+            generateIconCode(it)
+        }
+        val iconsMapCodes = generateIconMap(icons)
+
+        writeCode(iconsCodes + "\n\n" + iconsMapCodes)
         println("Successfully generated FaIcons.kt")
 
         println("Copying fonts to res folder...")
@@ -46,38 +48,66 @@ abstract class GenerateIconsTask : DefaultTask() {
         println("Done!")
     }
 
-    private fun generateCode(icon: IconData): String {
+    private fun generateIconCode(icon: IconData): String {
         val lines = mutableListOf<String>()
-        val propertyName = if (icon.name.first().isDigit()) "`${icon.name}`" else icon.name
 
-        if (icon.style.contains("solid")) {
+        if (icon.styles.contains("solid")) {
             lines.add(
                 """
                 |    // https://fontawesome.com/icons/${icon.originalName}?style=solid
                 |    // Solid icon : ${icon.name}
-                |    val ${propertyName} = SolidIcon(${icon.unicode})
+                |    val ${icon.propertyName} = SolidIcon(${icon.unicode})
                 """.trimMargin()
             )
-        } else if (icon.style.contains("brands")) {
+        } else if (icon.styles.contains("brands")) {
             lines.add(
                 """
                 |    // https://fontawesome.com/icons/${icon.originalName}?style=brands
                 |    // Brands icon : ${icon.name}
-                |    val ${propertyName} = BrandIcon(${icon.unicode})
+                |    val ${icon.propertyName} = BrandIcon(${icon.unicode})
                 """.trimMargin()
             )
         }
-        if (icon.style.contains("regular")) {
+        if (icon.styles.contains("regular")) {
             lines.add(
                 """
                 |    // https://fontawesome.com/icons/${icon.originalName}?style=regular
                 |    // Brands icon : ${icon.name}
-                |    val ${propertyName}Regular = RegularIcon(${icon.unicode})
+                |    val ${icon.propertyName}Regular = RegularIcon(${icon.unicode})
                 """.trimMargin()
             )
         }
 
         return lines.joinToString("\n\n")
+    }
+
+    private fun generateIconMap(icons: List<IconData>): String {
+        return icons
+            .fold(
+                mutableMapOf<String, MutableList<IconData>>(
+                    "solid" to mutableListOf(),
+                    "brands" to mutableListOf(),
+                    "regular" to mutableListOf()
+                )
+            ) { acc, icon ->
+                icon.styles.forEach {
+                    acc[it]?.add(icon)
+                }
+                acc
+            }
+            .entries
+            .joinToString("\n\n") { (style, iconList) ->
+                val suffix = if (style == "regular") "Regular" else ""
+                val iconMap = iconList.joinToString(",\n") {
+                    "        \"fa-${it.originalName}\" to ${it.propertyName}$suffix"
+                }
+
+                """
+                |    private val ${style}IconMap: Map<String, FaIconType> = mapOf(
+                |$iconMap
+                |    )
+                """.trimMargin()
+            }
     }
 
     private fun writeCode(lines: String) {
