@@ -81,8 +81,8 @@ fun SolidIcons() {
         FaIcon(faIcon = FaIcons.AddressBook)
         FaIcon(faIcon = FaIcons.FileCode)
         FaIcon(faIcon = FaIcons.ChartBar)
-        FaIcon(faIcon = FaIcons.MoneyBillAlt)
-        FaIcon(faIcon = FaIcons.DotCircle)
+        FaIcon(faIcon = FaIcons.MoneyBill1)
+        FaIcon(faIcon = FaIcons.CircleDot)
     }
 }
 
@@ -102,8 +102,8 @@ fun RegularIcons() {
         FaIcon(faIcon = FaIcons.AddressBookRegular)
         FaIcon(faIcon = FaIcons.FileCodeRegular)
         FaIcon(faIcon = FaIcons.ChartBarRegular)
-        FaIcon(faIcon = FaIcons.MoneyBillAltRegular)
-        FaIcon(faIcon = FaIcons.DotCircleRegular)
+        FaIcon(faIcon = FaIcons.MoneyBill1Regular)
+        FaIcon(faIcon = FaIcons.CircleDotRegular)
     }
 }
 
@@ -238,7 +238,7 @@ fun BackgroundClickable() {
         }
         IconButton(onClick = { }, modifier = Modifier.background(MaterialTheme.colors.primary,
             shape = CircleShape)) {
-            FaIcon(faIcon = FaIcons.YoutubeSquare, tint = MaterialTheme.colors.onPrimary)
+            FaIcon(faIcon = FaIcons.Youtube, tint = MaterialTheme.colors.onPrimary)
         }
         IconButton(onClick = { }, modifier = Modifier.background(MaterialTheme.colors.primary,
             shape = CircleShape)) {
@@ -272,13 +272,13 @@ fun IconsWithAppBar() {
 fun IconsInBottomNavigation() {
     BottomNavigation {
         BottomNavigationItem(
-            icon = { FaIcon(faIcon = FaIcons.Home, tint = LocalContentColor.current.copy(alpha = LocalContentAlpha.current))},
+            icon = { FaIcon(faIcon = FaIcons.House, tint = LocalContentColor.current.copy(alpha = LocalContentAlpha.current))},
             selected = true,
             onClick = {},
             label = { Text(text = "Home") },
         )
         BottomNavigationItem(
-            icon = { FaIcon(faIcon = FaIcons.SearchLocation, tint = LocalContentColor
+            icon = { FaIcon(faIcon = FaIcons.MagnifyingGlass, tint = LocalContentColor
                 .current.copy(alpha = LocalContentAlpha.current)) },
             selected = false,
             onClick = {},
@@ -314,10 +314,10 @@ fun IconsInListItem() {
                 )
                 Row {
                     IconButton(onClick = { /*TODO*/ }) {
-                        FaIcon(faIcon = FaIcons.CommentAltRegular)
+                        FaIcon(faIcon = FaIcons.CommentRegular)
                     }
                     IconButton(onClick = { /*TODO*/ }) {
-                        FaIcon(faIcon = FaIcons.SaveRegular)
+                        FaIcon(faIcon = FaIcons.FileRegular)
                     }
                     IconButton(onClick = { /*TODO*/ }) {
                         FaIcon(faIcon = FaIcons.FolderOpenRegular)
@@ -354,7 +354,7 @@ fun MaterialVsFaIcons() {
             Icon(imageVector = Icons.Default.Email, contentDescription = null)
         }
         Column {
-            FaIcon(faIcon = FaIcons.CheckCircle)
+            FaIcon(faIcon = FaIcons.CircleCheck)
             Spacer(modifier = Modifier.height(8.dp))
             Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = null)
         }
