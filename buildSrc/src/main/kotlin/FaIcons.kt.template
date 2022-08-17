@@ -1,0 +1,19 @@
+package com.guru.fontawesomecomposelib
+
+import com.guru.fontawesomecomposelib.FaIconType.*
+
+
+/**
+ * FaIcons is collection of all the icons from font awesome free icon pack
+ * It includes mainly three styles SOLID, BRAND, REGULAR
+ *
+ * Most icons are solid(1000+) then branded(250+) then regular(150+) at last.
+ *
+ * Default icons are solid as they are the most icons eg: AddressBook
+ * Regular icons are SUFFIXED with "Regular" eg: AddressBookRegular
+ * Brand icons are available as well eg: Airbnb, amazon
+ */
+
+object FaIcons {
+{{ ICONS }}
+}

@@ -21,6 +21,8 @@ allprojects {
     }
 }
 
+tasks.register<GenerateIconsTask>("generateIcons")
+
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
 }
