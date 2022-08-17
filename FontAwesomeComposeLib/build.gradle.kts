@@ -29,7 +29,7 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -45,7 +45,6 @@ android {
     
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.compose
-        kotlinCompilerVersion = Versions.kotlin
     }
 
     compileOptions {
@@ -54,7 +53,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-//        useIR = true
     }
 }
 
