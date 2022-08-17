@@ -89,3 +89,5 @@ lint/tmp/
 *.hprof
 /FontAwesomeComposeLib/build/
 local.properties
+.DS_Store
+
