@@ -18,11 +18,11 @@ afterEvaluate {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
-        minSdk = 21
-        targetSdk = 32
+        minSdk = 23
+        targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
