@@ -10122,7 +10122,7 @@ object FaIcons {
         return when(style) {
             "fa-solid" -> solidIconMap[originalIconName]
             "fa-regular" -> regularIconMap[originalIconName]
-            "fa-brands" -> regularIconMap[originalIconName]
+            "fa-brands" -> brandsIconMap[originalIconName]
             else -> null
         } ?: X
     }
