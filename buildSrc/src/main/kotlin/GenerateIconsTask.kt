@@ -117,7 +117,7 @@ abstract class GenerateIconsTask : DefaultTask() {
             .joinToString("\n\n") { (style, iconList) ->
                 val suffix = if (style == "regular") "Regular" else ""
                 val iconMap = iconList.joinToString(",\n") {
-                    "        \"fa-${it.originalName}\" to ${it.propertyName}$suffix"
+                    "        \"fa-${it.originalName}\" to FaIcons.${it.propertyName}${suffix}"
                 }
 
                 """

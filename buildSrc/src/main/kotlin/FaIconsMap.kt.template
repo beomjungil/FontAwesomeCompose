@@ -1,5 +1,5 @@
 package com.guru.fontawesomecomposelib
 
-object FaIconMap {
+object FaIconsMap {
 {{ ICONS_MAP }}
 }
