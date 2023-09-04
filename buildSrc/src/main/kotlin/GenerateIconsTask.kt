@@ -26,7 +26,7 @@ abstract class GenerateIconsTask : DefaultTask() {
         println("Reading metadata...")
         val metadata = File("${project.rootDir}/Font-Awesome/metadata/icons.json")
         val json = JsonSlurper().parseText(metadata.readText()) as Map<String, Map<String, Any>>
-        val icons = json.keys
+        val mainIcons = json.keys
             .map {
                 IconData(
                     unicode = "0x${json[it]?.get("unicode")}",
@@ -35,13 +35,31 @@ abstract class GenerateIconsTask : DefaultTask() {
                     styles = json[it]?.get("styles") as List<String>
                 )
             }
-        val iconsCodes = icons.joinToString("\n\n") {
+        val aliasesIcons = json.keys
+            .flatMap { key ->
+                val aliases = (json[key]?.get("aliases") as? Map<String, Any>)
+                val aliasNames = aliases?.get("names") as? List<String> ?: emptyList()
+
+                aliasNames.mapNotNull { alias ->
+                    IconData(
+                        unicode = "0x${json[key]?.get("unicode")}",
+                        name = key.kebabToPascalCase(),
+                        originalName = alias,
+                        styles = json[key]?.get("styles") as List<String>
+                    )
+                }
+            }
+        val icons = mainIcons + aliasesIcons
+
+        val iconsCodes = mainIcons.joinToString("\n\n") {
             generateIconCode(it)
         }
         val iconsMapCodes = generateIconMap(icons)
 
-        writeCode(iconsCodes + "\n\n" + iconsMapCodes)
+        writeIconCode(iconsCodes)
         println("Successfully generated FaIcons.kt")
+        writeIconMapCode(iconsMapCodes)
+        println("Successfully generated FaIconsMap.kt")
 
         println("Copying fonts to res folder...")
         moveFonts()
@@ -103,14 +121,14 @@ abstract class GenerateIconsTask : DefaultTask() {
                 }
 
                 """
-                |    private val ${style}IconMap: Map<String, FaIconType> = mapOf(
+                |    val ${style}: Map<String, FaIconType> = mapOf(
                 |$iconMap
                 |    )
                 """.trimMargin()
             }
     }
 
-    private fun writeCode(lines: String) {
+    private fun writeIconCode(lines: String) {
         val destination =
             File("${project.rootDir}/FontAwesomeComposeLib/src/main/java/com/guru/fontawesomecomposelib/FaIcons.kt")
         val template =
@@ -118,6 +136,16 @@ abstract class GenerateIconsTask : DefaultTask() {
 
 
         destination.writeText(template.replace("{{ ICONS }}", lines))
+    }
+
+    private fun writeIconMapCode(lines: String) {
+        val destination =
+            File("${project.rootDir}/FontAwesomeComposeLib/src/main/java/com/guru/fontawesomecomposelib/FaIconsMap.kt")
+        val template =
+            File("${project.rootDir}/buildSrc/src/main/kotlin/FaIconsMap.kt.template").readText()
+
+
+        destination.writeText(template.replace("{{ ICONS_MAP }}", lines))
     }
 
     private fun moveFonts() {

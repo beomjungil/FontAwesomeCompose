@@ -27,9 +27,9 @@ object FaIcons {
         }
 
         return when(style) {
-            "fa-solid" -> solidIconMap[originalIconName]
-            "fa-regular" -> regularIconMap[originalIconName]
-            "fa-brands" -> regularIconMap[originalIconName]
+            "fa-solid" -> FaIconMap.solid[originalIconName]
+            "fa-regular" -> FaIconMap.regular[originalIconName]
+            "fa-brands" -> FaIconMap.brands[originalIconName]
             else -> null
         } ?: X
     }
